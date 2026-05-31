@@ -1,15 +1,19 @@
 package com.example.bank.service;
 
+import com.example.bank.dto.AccountResponse;
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
 @Service
 public class BankService {
 
+    private static final Logger log = LoggerFactory.getLogger(BankService.class);
     private final AccountRepository accountRepository;
 
     public BankService(AccountRepository repo) {
@@ -19,43 +23,66 @@ public class BankService {
     @Transactional
     public void transfer(String from, String to, BigDecimal amount) {
 
+        if (from.equals(to)) {
+            throw new IllegalArgumentException("Self transfer not allowed");
+        }
+
+        validateAmount(amount);
+
+        String first = from.compareTo(to) < 0 ? from : to;
+        String second = from.compareTo(to) < 0 ? to : from;
+
+        Account firstAcc = accountRepository.findByNumberForUpdate(first)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        Account secondAcc = accountRepository.findByNumberForUpdate(second)
+                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+        Account fromAcc = from.equals(first) ? firstAcc : secondAcc;
+        Account toAcc = from.equals(first) ? secondAcc : firstAcc;
+
+        validateFunds(fromAcc, amount);
+
+        log.info(
+                "Transfer started: {} -> {} amount={}",
+                from,
+                to,
+                amount
+        );
+        applyTransfer(fromAcc, toAcc, amount);
+        log.info(
+                "Transfer completed: {} -> {} amount={}",
+                from,
+                to,
+                amount
+        );
+    }
+    @Transactional(readOnly = true)
+    public AccountResponse getAccount(String number){
+        Account account = accountRepository.findById(number).orElseThrow(()->
+                new IllegalArgumentException(
+                        "Account not found"
+                ));
+
+        return new AccountResponse(
+                account.getAccountNumber(),
+                account.getBalance()
+        );
+    }
+    private void validateAmount(BigDecimal amount){
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+
             throw new IllegalArgumentException("Сумма должна быть больше нуля");
         }
+    }
 
-        String first;
-        String second;
-        if(from.compareTo(to)< 0){
-            first = from;
-            second = to;
-        }else{
-            first = to;
-            second = from;
-        }
-
-        Account acc1 = accountRepository.findByNumberForUpdate(first) // блокируем через FOR UPDATE
-                .orElseThrow(() -> new IllegalArgumentException("Аккаунт отправителя не найден"));
-        Account acc2 = accountRepository.findByNumberForUpdate(second)
-                .orElseThrow(() -> new IllegalArgumentException("Аккаунт получателя не найден"));
-
-        Account fromAcc;
-        Account toAcc;
-
-        if(from.equals(first)){ // если аккаунты совпадают, то оставляем как есть.
-            fromAcc = acc1;
-            toAcc = acc2;
-        }else{
-            fromAcc = acc2; // если не совпадают то меняем между собой
-            toAcc = acc1;
-        }
-
-
+    private void validateFunds(Account fromAcc, BigDecimal amount){
         if (fromAcc.getBalance().compareTo(amount) < 0) {
             throw new IllegalArgumentException("Недостаточно средств");
         }
-
-        fromAcc.setBalance(fromAcc.getBalance().subtract(amount));
-        toAcc.setBalance(toAcc.getBalance().add(amount));
-
+    }
+    private void applyTransfer(Account from, Account to, BigDecimal amount){
+        from.setBalance(from.getBalance().subtract(amount));
+        to.setBalance(to.getBalance().add(amount));
     }
 }
