@@ -1,8 +1,7 @@
 package com.example.bank.model;
+import com.example.bank.enums.TransactionStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
@@ -11,16 +10,21 @@ import java.math.BigDecimal;
 public class Account {
 
     @Id
+    @Column(name = "account_number", nullable = false, length = 32)
     private String accountNumber;
 
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
+
+
+
     public Account() {
     }
+
     public Account(String accountNumber, BigDecimal balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
     }
-    // getters/setters
 
     public String getAccountNumber() {
         return accountNumber;
