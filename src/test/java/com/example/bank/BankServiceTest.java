@@ -111,4 +111,40 @@ public class BankServiceTest {
         assertEquals(1, accounts.size());
         assertEquals("A", accounts.get(0).getAccountNumber());
     }
+
+    @Test
+    void shouldFindRichAccounts() {
+        List<Account> accounts = accountRepository.findRichAccounts(new BigDecimal("1000"));
+
+        assertEquals(1, accounts.size());
+        assertEquals("A", accounts.get(0).getAccountNumber());
+    }
+
+    @Test
+    void shouldFindRichAccountsByNumberText() {
+        List<Account> accounts = accountRepository.findRichAccountsByNumberText(
+                new BigDecimal("900"),
+                "A"
+        );
+
+        assertEquals(1, accounts.size());
+        assertEquals("A", accounts.get(0).getAccountNumber());
+    }
+
+    @Test
+    void shouldFindAccountsOrderedByBalanceDesc() {
+        Account c = new Account();
+        c.setAccountNumber("C");
+        c.setBalance(new BigDecimal("1500"));
+        accountRepository.save(c);
+
+        List<Account> accounts = accountRepository.findByBalanceGreaterThanOrderByBalanceDesc(
+                new BigDecimal("400")
+        );
+
+        assertEquals(3, accounts.size());
+        assertEquals("C", accounts.get(0).getAccountNumber());
+        assertEquals("A", accounts.get(1).getAccountNumber());
+        assertEquals("B", accounts.get(2).getAccountNumber());
+    }
 }

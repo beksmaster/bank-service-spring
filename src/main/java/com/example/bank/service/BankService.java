@@ -1,23 +1,29 @@
 package com.example.bank.service;
 
 import com.example.bank.dto.AccountResponse;
+import com.example.bank.enums.TransactionStatus;
 import com.example.bank.model.Account;
+import com.example.bank.model.Transaction;
 import com.example.bank.repository.AccountRepository;
+import com.example.bank.repository.TransactionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Service
 public class BankService {
 
     private static final Logger log = LoggerFactory.getLogger(BankService.class);
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
-    public BankService(AccountRepository repo) {
+    public BankService(AccountRepository repo, TransactionRepository transactionRepository) {
         this.accountRepository = repo;
+        this.transactionRepository = transactionRepository;
     }
 
     @Transactional
@@ -56,6 +62,9 @@ public class BankService {
                 to,
                 amount
         );
+
+        Transaction transaction = new Transaction(fromAcc, toAcc, amount, TransactionStatus.COMPLETED);
+        transactionRepository.save(transaction);
     }
     @Transactional(readOnly = true)
     public AccountResponse getAccount(String number){

@@ -1,9 +1,7 @@
 package com.example.bank.model;
+import com.example.bank.enums.TransactionStatus;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
@@ -17,6 +15,8 @@ public class Account {
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
+
+
 
     public Account() {
     }

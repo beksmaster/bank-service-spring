@@ -22,4 +22,15 @@ public interface AccountRepository extends JpaRepository<Account, String> {
     List<Account> findByBalanceBetween(BigDecimal min, BigDecimal max);
 
     List<Account> findByAccountNumberContaining(String text);
+
+    @Query("SELECT a FROM Account a WHERE a.balance >= :amount")
+    List<Account> findRichAccounts(BigDecimal amount);
+
+    @Query("SELECT a FROM Account a WHERE a.balance >= :amount AND a.accountNumber LIKE %:text%")
+    List<Account> findRichAccountsByNumberText(BigDecimal amount, String text);
+
+    List<Account> findByBalanceGreaterThanOrderByBalanceDesc(BigDecimal amount);
+
+    boolean existsAccountByAccountNumber(String number);
+
 }

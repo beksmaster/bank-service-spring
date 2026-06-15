@@ -1,4 +1,23 @@
 package com.example.bank.repository;
+import org.springframework.data.domain.Page;
 
-public class TransactionRepository {
+import com.example.bank.model.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import org.springframework.data.domain.Pageable;
+import java.util.List;
+
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number")
+    Page<Transaction> findTransactionByAccountSender(String number, Pageable page);
+
+    @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number OR a.toAccount.accountNumber = :number")
+    List<Transaction> findTransactionsByAccountNumber(String number);
+
+    @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number ORDER BY a.createdAt DESC LIMIT 10")
+    List<Transaction> findLastTenTransactionsByAccountNumber(String number);
+
+
+
 }
