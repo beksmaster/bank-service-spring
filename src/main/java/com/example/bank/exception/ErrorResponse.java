@@ -1,5 +1,10 @@
 package com.example.bank.exception;
 
-public record ErrorResponse(String message) {
+import java.time.LocalDateTime;
 
+public record ErrorResponse(
+        LocalDateTime timestamp,
+        int status,
+        String message
+) {
 }

@@ -2,6 +2,9 @@ package com.example.bank.service;
 
 import com.example.bank.dto.AccountRequest;
 import com.example.bank.dto.AccountResponse;
+import com.example.bank.exception.AccountAlreadyExistsException;
+import com.example.bank.exception.AccountNotFoundException;
+import com.example.bank.exception.InsufficientFundsException;
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
 import org.springframework.stereotype.Service;
@@ -19,10 +22,8 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public AccountResponse getAccount(String number){
-        Account account = accountRepository.findById(number).orElseThrow(()->
-                new IllegalArgumentException(
-                        "Account not found"
-                ));
+        Account account = accountRepository.findById(number)
+                        .orElseThrow(AccountNotFoundException::new);
 
         return new AccountResponse(
                 account.getAccountNumber(),
@@ -33,12 +34,10 @@ public class AccountService {
 
     public AccountResponse createAccount(AccountRequest request) {
         if(accountRepository.existsById(request.accountNumber())){
-            throw new IllegalArgumentException("Account already exists");
+            throw new AccountAlreadyExistsException();
         }
         if(request.balance().compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException(
-                    "Balance cannot be negative"
-            );
+            throw new InsufficientFundsException();
         }
         Account account = new Account(
                 request.accountNumber(),
