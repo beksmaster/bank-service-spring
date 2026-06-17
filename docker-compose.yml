@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: bank
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: Bank2026
     ports:
       - "5432:5432"
 
@@ -17,6 +17,6 @@ services:
     environment:
       DB_URL: jdbc:postgresql://postgres:5432/bank
       DB_USERNAME: postgres
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASSWORD: Bank2026
     ports:
       - "8080:8080"
