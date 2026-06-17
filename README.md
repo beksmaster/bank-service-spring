@@ -28,6 +28,8 @@ REST API банковского сервиса на Spring Boot.
 ## Запуск через Docker
 
 ```bash
+mvn test
+mvn clean package
 docker compose up --build
 ```
 
