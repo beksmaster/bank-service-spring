@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: bank-postgres
+    environment:
+      POSTGRES_DB: bank
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: bank-app
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/bank
+      DB_USERNAME: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8080:8080"
