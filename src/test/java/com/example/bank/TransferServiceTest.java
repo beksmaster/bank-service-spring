@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 @Transactional
 public class TransferServiceTest {
+    @Test
+    void printEnv() {
+        System.out.println(System.getenv("DB_URL"));
+    }
 
     @Autowired
     private TransferService transferService;
