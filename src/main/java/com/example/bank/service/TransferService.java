@@ -1,6 +1,8 @@
 package com.example.bank.service;
 
 import com.example.bank.enums.TransactionStatus;
+import com.example.bank.exception.AccountNotFoundException;
+import com.example.bank.exception.InsufficientFundsException;
 import com.example.bank.model.Account;
 import com.example.bank.model.Transaction;
 import com.example.bank.repository.AccountRepository;
@@ -37,10 +39,10 @@ public class TransferService {
         String second = from.compareTo(to) < 0 ? to : from;
 
         Account firstAcc = accountRepository.findByNumberForUpdate(first)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+                .orElseThrow(AccountNotFoundException::new);
 
         Account secondAcc = accountRepository.findByNumberForUpdate(second)
-                .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+                .orElseThrow(AccountNotFoundException::new);
 
         Account fromAcc = from.equals(first) ? firstAcc : secondAcc;
         Account toAcc = from.equals(first) ? secondAcc : firstAcc;
@@ -68,13 +70,13 @@ public class TransferService {
     private void validateAmount(BigDecimal amount){
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
 
-            throw new IllegalArgumentException("Сумма должна быть больше нуля");
+            throw new InsufficientFundsException();
         }
     }
 
     private void validateFunds(Account fromAcc, BigDecimal amount){
         if (fromAcc.getBalance().compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Недостаточно средств");
+            throw new InsufficientFundsException();
         }
     }
     private void applyTransfer(Account from, Account to, BigDecimal amount){

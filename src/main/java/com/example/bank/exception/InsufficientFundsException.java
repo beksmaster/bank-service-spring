@@ -1,4 +1,7 @@
 package com.example.bank.exception;
 
-public class InsufficientFundsException {
+public class InsufficientFundsException extends RuntimeException {
+    public InsufficientFundsException() {
+        super("Insufficient funds");
+    }
 }
