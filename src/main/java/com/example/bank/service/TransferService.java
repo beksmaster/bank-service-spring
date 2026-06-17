@@ -1,6 +1,5 @@
 package com.example.bank.service;
 
-import com.example.bank.dto.AccountResponse;
 import com.example.bank.enums.TransactionStatus;
 import com.example.bank.model.Account;
 import com.example.bank.model.Transaction;
@@ -12,16 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Service
-public class BankService {
+public class TransferService {
 
-    private static final Logger log = LoggerFactory.getLogger(BankService.class);
+    private static final Logger log = LoggerFactory.getLogger(TransferService.class);
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
 
-    public BankService(AccountRepository repo, TransactionRepository transactionRepository) {
+    public TransferService(AccountRepository repo, TransactionRepository transactionRepository) {
         this.accountRepository = repo;
         this.transactionRepository = transactionRepository;
     }
@@ -66,18 +64,7 @@ public class BankService {
         Transaction transaction = new Transaction(fromAcc, toAcc, amount, TransactionStatus.COMPLETED);
         transactionRepository.save(transaction);
     }
-    @Transactional(readOnly = true)
-    public AccountResponse getAccount(String number){
-        Account account = accountRepository.findById(number).orElseThrow(()->
-                new IllegalArgumentException(
-                        "Account not found"
-                ));
 
-        return new AccountResponse(
-                account.getAccountNumber(),
-                account.getBalance()
-        );
-    }
     private void validateAmount(BigDecimal amount){
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
 

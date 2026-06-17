@@ -2,7 +2,7 @@ package com.example.bank;
 
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
-import com.example.bank.service.BankService;
+import com.example.bank.service.TransferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @Transactional
-public class BankServiceTest {
+public class TransferServiceTest {
 
     @Autowired
-    private BankService bankService;
+    private TransferService transferService;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -41,7 +41,7 @@ public class BankServiceTest {
     }
     @Test
     void shouldTransferMoney() {
-        bankService.transfer("A" , "B", new BigDecimal("200"));
+        transferService.transfer("A" , "B", new BigDecimal("200"));
         Account from = accountRepository.findById("A").get();
         Account to = accountRepository.findById("B").get();
 
@@ -53,14 +53,14 @@ public class BankServiceTest {
     void shouldFailWhenNotEnoughMoney() {
 
         assertThrows(IllegalArgumentException.class, () ->
-                bankService.transfer("A", "B", new BigDecimal("999999"))
+                transferService.transfer("A", "B", new BigDecimal("999999"))
         );
     }
 
     @Test
     void shouldFailWhenNegativeAmount() {
         assertThrows(IllegalArgumentException.class, () ->
-                bankService.transfer("A", "B", new BigDecimal("-10"))
+                transferService.transfer("A", "B", new BigDecimal("-10"))
         );
     }
 
@@ -68,7 +68,7 @@ public class BankServiceTest {
     void shouldRollbackWhenExceptionHappens() {
 
         assertThrows(RuntimeException.class, () -> {
-            bankService.transfer("A", "B", new BigDecimal("100"));
+            transferService.transfer("A", "B", new BigDecimal("100"));
             throw new RuntimeException("fail");
         });
 
