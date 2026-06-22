@@ -31,6 +31,7 @@ public class AccountController {
     @GetMapping("/{number}")
     public AccountResponse getAccount(
             @PathVariable String number) {
+        System.out.println("CONTROLLER REACHED");
         return accountService.getAccount(number);
     }
 }
