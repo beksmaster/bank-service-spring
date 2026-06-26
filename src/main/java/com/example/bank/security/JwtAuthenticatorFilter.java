@@ -1,5 +1,6 @@
 package com.example.bank.security;
 
+import com.example.bank.service.CustomUserDetailsService;
 import com.example.bank.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,6 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,9 +20,12 @@ import java.util.Collections;
 public class JwtAuthenticatorFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final CustomUserDetailsService userDetailsService;
 
-    public JwtAuthenticatorFilter(JwtService jwtService) {
+
+    public JwtAuthenticatorFilter(JwtService jwtService, CustomUserDetailsService userDetailsService) {
         this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -45,13 +51,16 @@ public class JwtAuthenticatorFilter extends OncePerRequestFilter {
 
         String username = jwtService.extractUsername(token);
 
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(username);
+
         System.out.println("USERNAME = " + username);
 
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(
-                        username,
+                        userDetails,
                         null,
-                        Collections.emptyList()
+                        userDetails.getAuthorities()
                 );
 
         System.out.println("AUTH CREATED");
