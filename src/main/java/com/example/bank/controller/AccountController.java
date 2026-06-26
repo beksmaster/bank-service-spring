@@ -7,6 +7,7 @@ import com.example.bank.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,6 +21,7 @@ public class AccountController {
     }
 
     @Operation(summary = "Create Account")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public AccountResponse createAccount(
            @Valid @RequestBody AccountRequest accountRequest
@@ -28,6 +30,7 @@ public class AccountController {
     }
 
     @Operation(summary = "Get Account by number")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/{number}")
     public AccountResponse getAccount(
             @PathVariable String number) {
