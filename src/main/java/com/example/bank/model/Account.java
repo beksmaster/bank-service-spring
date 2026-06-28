@@ -1,5 +1,4 @@
 package com.example.bank.model;
-import com.example.bank.enums.TransactionStatus;
 
 import jakarta.persistence.*;
 

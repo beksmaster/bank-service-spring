@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TransferServiceTest extends BaseIntegrationTest {
+class TransferServiceTest extends BaseIntegrationTest {
 
     @Autowired
     private TransferService transferService;
