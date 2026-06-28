@@ -16,7 +16,17 @@ public class Account {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal balance;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 
     public Account() {
     }
@@ -24,6 +34,12 @@ public class Account {
     public Account(String accountNumber, BigDecimal balance) {
         this.accountNumber = accountNumber;
         this.balance = balance;
+    }
+
+    public Account(String accountNumber, BigDecimal balance, User owner) {
+        this.accountNumber = accountNumber;
+        this.balance = balance;
+        this.owner = owner;
     }
 
     public String getAccountNumber() {

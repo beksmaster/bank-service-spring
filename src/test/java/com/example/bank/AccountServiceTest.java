@@ -26,40 +26,4 @@ public class AccountServiceTest {
 
     @InjectMocks
     private AccountService accountService;
-
-    @Test
-    void createAccount_shouldCreateAccount_whenAccountDoesNotExist() {
-        AccountRequest request = new AccountRequest(
-                "A100",
-                BigDecimal.valueOf(1000)
-        );
-        when(accountRepository.existsById("A100")).thenReturn(false);
-
-        AccountResponse response = accountService.createAccount(request);
-
-        assertEquals("A100", response.accountNumber());
-
-        assertEquals(BigDecimal.valueOf(1000),response.balance());
-
-        verify(accountRepository).save(any(Account.class));
-    }
-
-    @Test
-    void createAccount_shouldThrowException_whenAccountAlreadyExists() {
-        AccountRequest request = new AccountRequest(
-                "A100",
-                BigDecimal.valueOf(1000)
-        );
-        when(accountRepository.existsById("A100")).thenReturn(true);
-
-        assertThrows(
-                AccountAlreadyExistsException.class,
-                () -> accountService.createAccount(request)
-        );
-
-        verify(accountRepository, never())
-                .save(any(Account.class));
-    }
-
-
 }

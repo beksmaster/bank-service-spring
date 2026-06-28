@@ -1,6 +1,9 @@
 package com.example.bank.model;
 
+import com.example.bank.enums.Role;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,7 +19,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Account> accounts;
 
     public String getUsername() {
         return username;
@@ -34,11 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

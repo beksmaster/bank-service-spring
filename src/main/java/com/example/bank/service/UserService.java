@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static com.example.bank.enums.Role.USER;
+
 @Service
 public class UserService {
 
@@ -38,14 +40,14 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        user.setRole("USER");
+        user.setRole(USER);
 
         User saved = userRepository.save(user);
 
         return new RegisterResponse(
                 saved.getId(),
                 saved.getUsername(),
-                saved.getRole()
+                saved.getRole().name()
         );
 
     }
