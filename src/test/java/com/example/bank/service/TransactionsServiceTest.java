@@ -1,4 +1,4 @@
-package com.example.bank;
+package com.example.bank.service;
 
 import com.example.bank.dto.TransactionResponse;
 import com.example.bank.enums.TransactionStatus;
@@ -6,7 +6,6 @@ import com.example.bank.exception.TransactionNotFoundException;
 import com.example.bank.model.Account;
 import com.example.bank.model.Transaction;
 import com.example.bank.repository.TransactionRepository;
-import com.example.bank.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

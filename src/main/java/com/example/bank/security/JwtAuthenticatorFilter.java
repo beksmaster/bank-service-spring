@@ -44,17 +44,17 @@ public class JwtAuthenticatorFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         if(!jwtService.isTokenValid(token)) {
-            filterChain.doFilter(request, response);
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    "Invalid JWT token"
+            );
             return;
         }
-        System.out.println("TOKEN VALID");
 
         String username = jwtService.extractUsername(token);
 
         UserDetails userDetails =
                 userDetailsService.loadUserByUsername(username);
-
-        System.out.println("USERNAME = " + username);
 
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(
@@ -63,13 +63,7 @@ public class JwtAuthenticatorFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
 
-        System.out.println("AUTH CREATED");
-
         SecurityContextHolder.getContext().setAuthentication(auth);
-
-        System.out.println("AUTH SET");
-
-        System.out.println("Authenticated user: " + username);
 
         filterChain.doFilter(request, response);
     }

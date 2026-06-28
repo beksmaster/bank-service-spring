@@ -23,6 +23,16 @@ public class GlobalExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(SelfTransferNotAllowedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleSelfTransfer(SelfTransferNotAllowedException ex) {
+        return new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
+    }
+
     @ExceptionHandler(AccountAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleAccountAlreadyExists (
             AccountAlreadyExistsException ex

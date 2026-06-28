@@ -27,8 +27,8 @@ public class TransferController {
     public void transfer(
             @Valid @RequestBody TransferRequest request){
         service.transfer(
-                request.from(),
-                request.to(),
+                request.fromAccount(),
+                request.toAccount(),
                 request.amount()
         );
     }
