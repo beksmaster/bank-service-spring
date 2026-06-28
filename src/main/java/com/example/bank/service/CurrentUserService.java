@@ -10,6 +10,9 @@ public class CurrentUserService {
     public String getUsername() {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            throw new IllegalStateException("No authenticated user");
+        }
 
         return authentication.getName();
     }
