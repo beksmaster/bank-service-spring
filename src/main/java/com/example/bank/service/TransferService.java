@@ -17,13 +17,15 @@ import java.math.BigDecimal;
 @Service
 public class TransferService {
 
-    private static final Logger log = LoggerFactory.getLogger(TransferService.class);
+    static final Logger log = LoggerFactory.getLogger(TransferService.class);
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final CurrentUserService currentUserService;
 
-    public TransferService(AccountRepository repo, TransactionRepository transactionRepository) {
+    public TransferService(AccountRepository repo, TransactionRepository transactionRepository, CurrentUserService currentUserService) {
         this.accountRepository = repo;
         this.transactionRepository = transactionRepository;
+        this.currentUserService = currentUserService;
     }
 
     @Transactional
@@ -35,13 +37,25 @@ public class TransferService {
 
         validateAmount(amount);
 
+        String username = currentUserService.getUsername();
+
         String first = from.compareTo(to) < 0 ? from : to;
         String second = from.compareTo(to) < 0 ? to : from;
 
-        Account firstAcc = accountRepository.findByNumberForUpdate(first)
+        Account firstAcc = first.equals(from)
+                ? accountRepository
+                .findByNumberForUpdateAndOwner(first, username)
+                .orElseThrow(AccountNotFoundException::new)
+                : accountRepository
+                .findByNumberForUpdate(first)
                 .orElseThrow(AccountNotFoundException::new);
 
-        Account secondAcc = accountRepository.findByNumberForUpdate(second)
+        Account secondAcc = second.equals(from)
+                ? accountRepository
+                .findByNumberForUpdateAndOwner(second, username)
+                .orElseThrow(AccountNotFoundException::new)
+                : accountRepository
+                .findByNumberForUpdate(second)
                 .orElseThrow(AccountNotFoundException::new);
 
         Account fromAcc = from.equals(first) ? firstAcc : secondAcc;

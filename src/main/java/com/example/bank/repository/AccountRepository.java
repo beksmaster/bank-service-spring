@@ -33,4 +33,20 @@ public interface AccountRepository extends JpaRepository<Account, String> {
 
     boolean existsAccountByAccountNumber(String number);
 
+    Optional<Account> findByAccountNumberAndOwnerUsername(
+            String accountNumber,
+            String username
+    );
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+    SELECT a
+    FROM Account a
+    WHERE a.accountNumber = :number
+    AND a.owner.username = :username
+    """)
+    Optional<Account> findByNumberForUpdateAndOwner(
+            String number,
+            String username
+    );
 }

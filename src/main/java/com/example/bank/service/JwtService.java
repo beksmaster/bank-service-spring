@@ -22,22 +22,15 @@ public class JwtService {
 
     public String generateToken(User user) {
 
-        System.out.println("SECRET = " + secret);
-        System.out.println("EXPIRATION = " + expiration);
-
         Date now = new Date();
 
         Date expiryDate = new Date(
                 now.getTime() + expiration
         );
-        System.out.println("STEP 1");
-
 
         SecretKey secretKey = Keys.hmacShaKeyFor(
                 secret.getBytes(StandardCharsets.UTF_8)
         );
-
-        System.out.println("STEP 2");
 
         String token =  Jwts.builder()
                 .subject(user.getUsername())
@@ -46,8 +39,6 @@ public class JwtService {
                 .expiration(expiryDate)
                 .signWith(secretKey)
                 .compact();
-
-        System.out.println("STEP 3");
 
         return token;
     }
