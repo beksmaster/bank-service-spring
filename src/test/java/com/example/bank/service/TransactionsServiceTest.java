@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class TransactionsServiceTest extends BaseIntegrationTest {
+public class TransactionsServiceTest {
     @Mock
     private TransactionRepository repository;
 

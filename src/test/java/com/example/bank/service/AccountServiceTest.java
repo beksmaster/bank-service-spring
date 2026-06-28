@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest extends BaseIntegrationTest {
+public class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
 

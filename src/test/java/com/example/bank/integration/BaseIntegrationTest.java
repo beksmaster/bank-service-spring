@@ -15,16 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Transactional
 public abstract class BaseIntegrationTest {
 
-    @BeforeAll
-    static void beforeAll() {
-
-        postgres.start();
-
-        System.out.println(postgres.getJdbcUrl());
-        System.out.println(postgres.getLogs());
-
-    }
-
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgres =

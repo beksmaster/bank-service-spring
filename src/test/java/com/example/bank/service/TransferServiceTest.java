@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
-public class TransferServiceTest extends BaseIntegrationTest {
+public class TransferServiceTest {
 
     @Autowired
     private TransferService transferService;
