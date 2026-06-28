@@ -1,5 +1,6 @@
 package com.example.bank.integration;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -14,6 +15,14 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Transactional
 public abstract class BaseIntegrationTest {
+
+    @BeforeAll
+    static void printContainerInfo() {
+        postgres.start();
+
+        System.out.println("JDBC: " + postgres.getJdbcUrl());
+        System.out.println("Running: " + postgres.isRunning());
+    }
 
     @Container
     static PostgreSQLContainer<?> postgres =
