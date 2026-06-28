@@ -4,12 +4,14 @@ import com.example.bank.dto.LoginRequest;
 import com.example.bank.dto.LoginResponse;
 import com.example.bank.dto.RegisterRequest;
 import com.example.bank.dto.RegisterResponse;
+import com.example.bank.exception.IncorrectPasswordException;
+import com.example.bank.exception.UserAlreadyExistsException;
 import com.example.bank.model.User;
 import com.example.bank.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 import static com.example.bank.enums.Role.USER;
 
@@ -31,7 +33,7 @@ public class UserService {
     public RegisterResponse register(RegisterRequest request) {
 
         if(userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Username already exists.");
+            throw new UserAlreadyExistsException("Username already exists.");
         }
 
         User user = new User();
@@ -56,14 +58,14 @@ public class UserService {
 
         User user = userRepository.findByUsername(
                 request.username()).orElseThrow(
-                () -> new RuntimeException("Username not found.")
+                () -> new UsernameNotFoundException("Username not found")
         );
 
         if (!passwordEncoder.matches(
                 request.password(),
                 user.getPassword()
         )) {
-            throw new RuntimeException("Password is incorrect");
+            throw new IncorrectPasswordException("Password is incorrect");
         }
 
         String token = jwtService.generateToken(user);

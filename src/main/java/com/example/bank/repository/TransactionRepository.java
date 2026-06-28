@@ -12,9 +12,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number")
     Page<Transaction> findTransactionByAccountSender(String number, Pageable page);
 
-//    @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number OR a.toAccount.accountNumber = :number")
-//    List<Transaction> findTransactionsByAccountNumber(String number);
-
     @Query("SELECT a from Transaction a where a.fromAccount.accountNumber = :number ORDER BY a.createdAt DESC LIMIT 10")
     List<Transaction> findLastTenTransactionsByAccountNumber(String number);
 
