@@ -13,7 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AccountRepositoryTest extends BaseIntegrationTest {
+class AccountRepositoryTest extends BaseIntegrationTest {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired

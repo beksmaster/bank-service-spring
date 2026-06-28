@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -17,7 +18,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.NOT_FOUND.value(),
                                 ex.getMessage()
                         )
