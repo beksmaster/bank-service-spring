@@ -1,5 +1,6 @@
 package com.example.bank.service;
 
+import com.example.bank.integration.BaseIntegrationTest;
 import com.example.bank.repository.AccountRepository;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTest {
+public class AccountServiceTest extends BaseIntegrationTest {
     @Mock
     private AccountRepository accountRepository;
 

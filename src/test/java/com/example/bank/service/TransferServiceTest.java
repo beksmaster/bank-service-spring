@@ -3,6 +3,7 @@ package com.example.bank.service;
 import com.example.bank.enums.Role;
 import com.example.bank.exception.InsufficientFundsException;
 import com.example.bank.exception.SelfTransferNotAllowedException;
+import com.example.bank.integration.BaseIntegrationTest;
 import com.example.bank.model.Account;
 import com.example.bank.model.User;
 import com.example.bank.repository.AccountRepository;
@@ -21,10 +22,8 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
-public class TransferServiceTest {
+
+public class TransferServiceTest extends BaseIntegrationTest {
 
     @Autowired
     private TransferService transferService;
