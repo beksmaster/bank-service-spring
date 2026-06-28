@@ -3,6 +3,7 @@ package com.example.bank.service;
 import com.example.bank.enums.TransactionStatus;
 import com.example.bank.exception.AccountNotFoundException;
 import com.example.bank.exception.InsufficientFundsException;
+import com.example.bank.exception.SelfTransferNotAllowedException;
 import com.example.bank.model.Account;
 import com.example.bank.model.Transaction;
 import com.example.bank.repository.AccountRepository;
@@ -32,7 +33,7 @@ public class TransferService {
     public void transfer(String from, String to, BigDecimal amount) {
 
         if (from.equals(to)) {
-            throw new IllegalArgumentException("Self transfer not allowed");
+            throw new SelfTransferNotAllowedException("Self transfer not allowed");
         }
 
         validateAmount(amount);

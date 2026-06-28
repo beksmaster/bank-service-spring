@@ -1,14 +1,14 @@
-package com.example.bank;
+package com.example.bank.service;
 
 import com.example.bank.enums.Role;
 import com.example.bank.exception.InsufficientFundsException;
+import com.example.bank.exception.SelfTransferNotAllowedException;
 import com.example.bank.model.Account;
 import com.example.bank.model.User;
 import com.example.bank.repository.AccountRepository;
 import com.example.bank.repository.TransactionRepository;
 import com.example.bank.repository.UserRepository;
 import org.springframework.security.test.context.support.WithMockUser;
-import com.example.bank.service.TransferService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +47,7 @@ public class TransferServiceTest {
 
         User user = new User();
         user.setUsername("samat");
-        user.setPassword("samat");
+        user.setPassword("encode");
         user.setRole(Role.USER);
         userRepository.save(user);
 
@@ -60,15 +59,6 @@ public class TransferServiceTest {
         accountRepository.save(b);
     }
 
-    @Autowired
-    DataSource dataSource;
-
-    @Test
-    void printDb() throws Exception {
-        System.out.println(
-                dataSource.getConnection().getMetaData().getURL()
-        );
-    }
 
     @Test
     @WithMockUser(username = "samat", roles = "USER")
@@ -101,7 +91,7 @@ public class TransferServiceTest {
         BigDecimal amount = new BigDecimal("100");
 
         assertThrows(
-                IllegalArgumentException.class,
+                SelfTransferNotAllowedException.class,
                 () -> transferService.transfer(
                         "A",
                         "A",

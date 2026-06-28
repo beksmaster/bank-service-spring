@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 
 public record TransferRequest(
         @NotBlank
-        String from,
+        String fromAccount,
 
         @NotBlank
-        String to,
+        String toAccount,
 
         @NotNull
         @Positive
