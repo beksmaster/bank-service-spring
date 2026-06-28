@@ -28,6 +28,10 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Docker info
+        run: |
+          docker ps -a
+          docker images
 
       - name: Build with Maven
         run: ./mvnw clean verify

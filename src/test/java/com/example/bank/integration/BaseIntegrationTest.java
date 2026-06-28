@@ -1,5 +1,6 @@
 package com.example.bank.integration;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,6 +14,16 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ActiveProfiles("test")
 @Transactional
 public abstract class BaseIntegrationTest {
+
+    @BeforeAll
+    static void beforeAll() {
+
+        postgres.start();
+
+        System.out.println(postgres.getJdbcUrl());
+        System.out.println(postgres.getLogs());
+
+    }
 
     @Container
     @ServiceConnection
