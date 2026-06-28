@@ -6,7 +6,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -29,7 +28,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleSelfTransfer(SelfTransferNotAllowedException ex) {
         return new ErrorResponse(
-                LocalDateTime.now(),
+                Instant.now(),
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage()
         );
@@ -42,7 +41,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.CONFLICT.value(),
                                 ex.getMessage()
                         )
@@ -56,7 +55,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.CONFLICT.value(),
                                 ex.getMessage()
                         )
@@ -70,7 +69,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.BAD_REQUEST.value(),
                                 ex.getMessage()
                         )
@@ -84,7 +83,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.BAD_REQUEST.value(),
                                 ex.getMessage()
                         )
@@ -98,7 +97,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.NOT_FOUND.value(),
                                 ex.getMessage()
                         )
@@ -112,7 +111,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.NOT_FOUND.value(),
                                 ex.getMessage()
                         )
@@ -125,7 +124,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                 "Internal server error"
                         )
@@ -145,7 +144,7 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(
                         new ErrorResponse(
-                                LocalDateTime.now(),
+                                Instant.now(),
                                 HttpStatus.BAD_REQUEST.value(),
                                 message
                         )
