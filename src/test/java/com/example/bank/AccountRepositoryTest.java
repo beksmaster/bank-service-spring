@@ -1,24 +1,19 @@
 package com.example.bank;
 
+import com.example.bank.integration.BaseIntegrationTest;
 import com.example.bank.model.Account;
 import com.example.bank.repository.AccountRepository;
 import com.example.bank.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-@ActiveProfiles("test")
-@Transactional
-public class AccountRepositoryTest {
+public class AccountRepositoryTest extends BaseIntegrationTest {
     @Autowired
     private AccountRepository accountRepository;
     @Autowired

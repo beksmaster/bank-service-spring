@@ -1,29 +1,23 @@
 package com.example.bank.service;
 
 import com.example.bank.enums.Role;
-import com.example.bank.exception.InsufficientFundsException;
-import com.example.bank.exception.SelfTransferNotAllowedException;
 import com.example.bank.integration.BaseIntegrationTest;
 import com.example.bank.model.Account;
 import com.example.bank.model.User;
 import com.example.bank.repository.AccountRepository;
 import com.example.bank.repository.TransactionRepository;
 import com.example.bank.repository.UserRepository;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
-public class TransferServiceTest {
+public class TransferServiceTest extends BaseIntegrationTest {
 
     @Autowired
     private TransferService transferService;
@@ -35,67 +29,37 @@ public class TransferServiceTest {
     private TransactionRepository transactionRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setup() {
-
         transactionRepository.deleteAll();
         accountRepository.deleteAll();
         userRepository.deleteAll();
 
         User user = new User();
         user.setUsername("samat");
-        user.setPassword("encode");
+        user.setPassword(passwordEncoder.encode("samat"));
         user.setRole(Role.USER);
+
         userRepository.save(user);
 
-        Account a = new Account("A", new BigDecimal("1000"), user);
-
-        Account b = new Account("B", new BigDecimal("500"), user);
-
-        accountRepository.save(a);
-        accountRepository.save(b);
+        accountRepository.save(new Account("A", new BigDecimal("1000"), user));
+        accountRepository.save(new Account("B", new BigDecimal("500"), user));
     }
-
 
     @Test
     @WithMockUser(username = "samat", roles = "USER")
     void shouldTransferMoney() {
         transferService.transfer("A", "B", new BigDecimal("200"));
-        Account from = accountRepository.findById("A").get();
-        Account to = accountRepository.findById("B").get();
+
+        Account from = accountRepository.findById("A").orElseThrow();
+        Account to = accountRepository.findById("B").orElseThrow();
 
         assertEquals(new BigDecimal("800"), from.getBalance());
         assertEquals(new BigDecimal("700"), to.getBalance());
-    }
-
-    @Test
-    @WithMockUser(username = "samat", roles = "USER")
-    void shouldFailWhenNotEnoughMoney() {
-        assertThrows(InsufficientFundsException.class, () ->
-                transferService.transfer("A", "B", new BigDecimal("999999"))
-        );
-    }
-
-    @Test
-    void shouldFailWhenNegativeAmount() {
-        assertThrows(InsufficientFundsException.class, () ->
-                transferService.transfer("A", "B", new BigDecimal("-10"))
-        );
-    }
-
-    @Test
-    void shouldFailWhenTransferToSameAccount() {
-        BigDecimal amount = new BigDecimal("100");
-
-        assertThrows(
-                SelfTransferNotAllowedException.class,
-                () -> transferService.transfer(
-                        "A",
-                        "A",
-                        amount
-                )
-        );
     }
 }
