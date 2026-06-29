@@ -119,6 +119,23 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldReturn409UserAlreadyExists() throws Exception {
+        mockMvc.perform(
+                post(
+                        "/api/v1/auth/register"
+                )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "username":"samat",
+                                "password":"samat"
+                                }
+                                """)
+        )
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     void shouldReturn401WithoutToken() throws Exception {
 
        mockMvc.perform(

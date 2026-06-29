@@ -19,7 +19,8 @@ public class TransactionService {
 
     public TransactionResponse getById(Long id){
         Transaction transaction =
-                repository.findById(id).orElseThrow(TransactionNotFoundException::new);
+                repository.findById(id)
+                        .orElseThrow(TransactionNotFoundException::new);
         return toResponse(transaction);
     }
 
