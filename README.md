@@ -139,9 +139,10 @@ docker compose up -d postgres
 Создайте в корне проекта файл `.env`:
 
 ```env
-DB_URL=jdbc:postgresql://localhost:5432/bank
-DB_USERNAME=postgres
-DB_PASSWORD=Bank2026
+DB_URL=jdbc:postgresql://localhost:5432/<your-db-name>
+DB_USERNAME=<your-username>
+DB_PASSWORD=<your-password>
+JWT_SECRET=<your-secret>
 ```
 
 Не добавляйте настоящий `.env` и секреты в Git.
