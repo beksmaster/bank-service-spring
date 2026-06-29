@@ -136,6 +136,21 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldReturn400UserOrPasswordNotValid() throws Exception {
+        mockMvc.perform(
+                post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "username":"",
+                                "password":" "
+                                }
+                                """)
+        )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void shouldReturn401WithoutToken() throws Exception {
 
        mockMvc.perform(
