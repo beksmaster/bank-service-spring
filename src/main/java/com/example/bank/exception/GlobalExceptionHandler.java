@@ -35,20 +35,6 @@ public class GlobalExceptionHandler {
         );
     }
 
-    @ExceptionHandler(AccountAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleAccountAlreadyExists (
-            AccountAlreadyExistsException ex
-    ) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(
-                        new ErrorResponse(
-                                Instant.now(),
-                                HttpStatus.CONFLICT.value(),
-                                ex.getMessage()
-                        )
-                );
-    }
-
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleUserNotFound (
             UsernameNotFoundException ex

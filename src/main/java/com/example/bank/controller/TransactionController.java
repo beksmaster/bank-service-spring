@@ -28,6 +28,7 @@ public class TransactionController {
     ) {
         return service.getById(id);
     }
+    //TODO сделать геттер по юзеру
 
     @GetMapping("/account/{number}")
     public Page<TransactionResponse> getByAccount(
