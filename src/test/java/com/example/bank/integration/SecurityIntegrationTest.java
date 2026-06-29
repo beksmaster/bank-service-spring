@@ -85,6 +85,39 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
         )
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void shouldReturn401LoginUnsuccesfully() throws Exception {
+        mockMvc.perform(
+                post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "username":"samat",
+                                "password":"bektur"
+                                }
+                                """
+                        )
+        )
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void shouldReturn401UserNotFound() throws Exception {
+        mockMvc.perform(
+                        post("/api/v1/auth/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                {
+                                "username":"userNotExists",
+                                "password":"randomPassword"
+                                }
+                                """
+                                )
+                )
+                .andExpect(status().isUnauthorized());
+    }
+
     @Test
     void shouldReturn401WithoutToken() throws Exception {
 
