@@ -72,6 +72,22 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldCreateUser() throws Exception {
+        mockMvc.perform(
+                post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "username":"aibek",
+                                "password":"aibek"
+                                }
+                                """
+                        )
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void shouldLoginSuccessfully() throws Exception {
         mockMvc.perform(
                 post("/api/v1/auth/login")
@@ -201,6 +217,23 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void shouldCreateAccount() throws Exception {
+        String token = loginAndGetToken("samat", "samat");
+
+        mockMvc.perform(
+                post("/api/v1/accounts/create")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "balance":100
+                                }
+                                """)
+        )
+                .andExpect(status().isOk());
+    }
+
+    @Test
     void shouldNotAccessForeignAccount() throws Exception {
 
         String token = loginAndGetToken("samat", "samat");
@@ -301,6 +334,33 @@ public class SecurityIntegrationTest extends BaseIntegrationTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("Self transfer not allowed"));
+    }
+
+    @Test
+    void shouldRejectTransferWhenInsufficientFunds() throws Exception {
+        String token = loginAndGetToken("samat", "samat");
+
+        mockMvc.perform(
+                post("/api/v1/transfers/transfer")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                "fromAccount":"ACC-11111111",
+                                "toAccount":"ACC-22222222",
+                                "amount":1100
+                                }
+                                """)
+        ).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturn404TransactionNotFound() throws Exception {
+        String token = loginAndGetToken("samat", "samat");
+        mockMvc.perform(
+                get("/api/v1/transactions/11")
+                        .header("Authorization", "Bearer " + token)
+        ).andExpect(status().isNotFound());
     }
 
     @Test
