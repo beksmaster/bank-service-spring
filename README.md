@@ -1,7 +1,7 @@
 # Bank Service
 
 [![Java CI](https://github.com/beksmaster/bank-service-spring/actions/workflows/maven.yml/badge.svg)](https://github.com/beksmaster/bank-service-spring/actions/workflows/maven.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=beksmaster_bank-service-spring&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=beksmaster_bank-service-spring)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.example%3Ademo&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=com.example%3Ademo)
 
 Учебный REST API банковского сервиса на Spring Boot. Приложение позволяет регистрировать пользователей, создавать счета, переводить деньги и просматривать историю транзакций.
 
