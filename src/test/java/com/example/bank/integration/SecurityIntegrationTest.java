@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class SecurityIntegrationTest extends BaseIntegrationTest {
+ class SecurityIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private TransactionRepository transactionRepository;
